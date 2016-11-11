@@ -4,6 +4,7 @@ import FlatButton from 'material-ui/FlatButton';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import TextField from 'material-ui/TextField';
+import Checkbox from 'material-ui/Checkbox';
 
 import TaskService from './TaskService.js';
 
@@ -148,14 +149,25 @@ class Top extends Component {
       </div>
     );
 
+    const complete = (key, defaultChecked) => {
+      return (
+        <Checkbox
+          style={{position: 'absolute', top: 14, left: 14}}
+          onCheck={(e, checked) => console.log(e, checked)}
+          defaultChecked={defaultChecked}
+        />
+      );
+    };
+
     const TaskCard = (task, key) => (
       // 複数要素の場合 `key` プロパティが必要
-      <Card key={key} style={{marginTop: 20}}>
+      <Card key={key} style={{marginTop: 20, position: 'relative'}}>
         <CardHeader
-          title={task.summary}
+          title={<span style={{paddingLeft: 40}}>{task.summary}</span>}
           actAsExpander={true}
           showExpandableButton={true}
         />
+        {complete(key, task.complete)}
         <CardText expandable={true}>
           {task.detail.split(/\r*\n/).map((line, index) => <div key={index}>{line}</div>)}
         </CardText>
