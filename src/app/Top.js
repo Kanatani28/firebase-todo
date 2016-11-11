@@ -3,6 +3,7 @@ import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import FlatButton from 'material-ui/FlatButton';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
+import TextField from 'material-ui/TextField';
 
 const TaskCard = (task, key) => (
   // 複数要素の場合 `key` プロパティが必要
@@ -55,18 +56,70 @@ class Top extends Component {
         {summary: 'summary', detail: 'detail'},
         {summary: 'summary', detail: 'detail'},
       ],
+      showAddForm: false,
     };
   }
 
+  handleAddTap = () => {
+    console.log('add');
+    this.setState({showAddForm: true});
+  }
+
+  handleCancelTap = () => {
+    console.log('cancel');
+    this.setState({showAddForm: false});
+  }
+
+  handleSaveTap = () => {
+    console.log('save');
+    // TODO: save
+    this.setState({showAddForm: false});
+  }
+
   render() {
+    const addForm = (
+      <div style={{marginLeft: 30, marginTop: 30}}>
+        <h2>タスク追加フォーム</h2>
+        <TextField
+          hintText="Hint Text"
+          floatingLabelText="概要"
+        /><br />
+        <TextField
+          hintText="Hint Text"
+          floatingLabelText="詳細"
+          multiLine={true}
+          rows={2}
+          rowsMax={4}
+        /><br />
+        <div>
+          <FlatButton
+            label="保存"
+            primary={true}
+            onTouchTap={this.handleSaveTap}
+          />
+          <FlatButton
+            label="キャンセル"
+            onTouchTap={this.handleCancelTap}
+          />
+        </div>
+      </div>
+    );
+
     return (
       <div style={{padding: 10, marginTop: 10, marginBottom: 70}}>
-        {this.state.tasks.map(TaskCard)}
-        <div style={styles.footer}>
-          <FloatingActionButton style={styles.add}>
-            <ContentAdd />
-          </FloatingActionButton>
-        </div>
+        {this.state.showAddForm ? addForm :
+          <div>
+            {this.state.tasks.map(TaskCard)}
+            <div style={styles.footer}>
+              <FloatingActionButton
+                style={styles.add}
+                onTouchTap={this.handleAddTap}
+              >
+                <ContentAdd />
+              </FloatingActionButton>
+            </div>
+          </div>
+        }
       </div>
       // 複数のタグはdivで囲むか配列としてreturn
     );
