@@ -31,14 +31,14 @@ class Main extends Component {
     super(props, context);
 
     this.state = {
-      open: false,
+      user: null,
     };
   }
 
   // Mainコンポーネントがマウントされる直前に実行される
   componentWillMount = () => {
     firebase.auth().getRedirectResult()
-      .then((result) => console.log('user', result.user))
+      .then((result) => this.setState({user: result.user}))
       // .catch((err) => console.log('auth error', err))
       // .catch書かなかったらErrorがthrowされる
 
@@ -48,10 +48,6 @@ class Main extends Component {
   handleTouchTap = () => {
     const provider = new firebase.auth.GoogleAuthProvider();
     firebase.auth().signInWithRedirect(provider);
-
-    this.setState({
-      open: true,
-    });
   }
 
   render() {
@@ -63,16 +59,24 @@ class Main extends Component {
       />
     );
 
+    const login = (
+      <div style={styles.container}>
+        <h1>Firebase TODO</h1>
+        <RaisedButton
+          label="Googleアカウントでログイン"
+          secondary={true}
+          onTouchTap={this.handleTouchTap}
+        />
+      </div>
+    );
+
+    const top = (
+      <div>ログイン成功したよ</div>
+    )
+
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
-        <div style={styles.container}>
-          <h1>Firebase TODO</h1>
-          <RaisedButton
-            label="Googleアカウントでログイン"
-            secondary={true}
-            onTouchTap={this.handleTouchTap}
-          />
-        </div>
+        {this.state.user ? top : login}
       </MuiThemeProvider>
     );
   }
