@@ -102,6 +102,11 @@ class Top extends Component {
     this.setState({showAddForm: false});
   }
 
+  handleComplete = (key, complete) => {
+    TaskService.complete(this.props.user.uid, key, complete)
+      .then(() => console.log('complete success', arguments));
+  }
+
   changeSummary = (e) => {
     const summary = e.target.value;
     // FIXME: 入力値チェック
@@ -151,11 +156,13 @@ class Top extends Component {
 
     const complete = (key, defaultChecked) => {
       return (
-        <Checkbox
-          style={{position: 'absolute', top: 14, left: 14}}
-          onCheck={(e, checked) => console.log(e, checked)}
-          defaultChecked={defaultChecked}
-        />
+        <div style={{position: 'absolute', top: 16, left: 16}}>
+          <Checkbox
+            onCheck={(e, checked) => this.handleComplete(key, checked)}
+            defaultChecked={defaultChecked}
+            style={{float: 'right'}}
+          />
+        </div>
       );
     };
 

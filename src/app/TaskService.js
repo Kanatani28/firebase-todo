@@ -24,6 +24,11 @@ class TaskService {
   static delete(uid, key) {
     return this.update(uid, key, null);
   }
+
+  static complete(uid, key, complete) {
+    return firebase.database()
+            .ref(['/task', uid, key, 'complete'].join('/')).set(complete);
+  }
 }
 
 export default TaskService;
