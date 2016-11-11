@@ -156,7 +156,10 @@ class Top extends Component {
           actAsExpander={true}
           showExpandableButton={true}
         />
-        <CardActions>
+        <CardText expandable={true}>
+          {task.detail.split(/\r*\n/).map((line, index) => <div key={index}>{line}</div>)}
+        </CardText>
+        <CardActions expandable={true}>
           <FlatButton
             label="編集"
             onTouchTap={() => this.handleEditTap(key)}
@@ -166,9 +169,6 @@ class Top extends Component {
             onTouchTap={() => this.handleRemoveTap(key)}
           />
         </CardActions>
-        <CardText expandable={true}>
-          {task.detail.split(/\r*\n/).map((line, index) => <div key={index}>{line}</div>)}
-        </CardText>
       </Card>
     );
 
