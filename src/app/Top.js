@@ -167,7 +167,7 @@ class Top extends Component {
           />
         </CardActions>
         <CardText expandable={true}>
-          {task.detail}
+          {task.detail.split(/\r*\n/).map((line, index) => <div key={index}>{line}</div>)}
         </CardText>
       </Card>
     );
