@@ -1,3 +1,5 @@
+import firebase from './init_firebase.js';
+
 import React from 'react';
 import {render} from 'react-dom';
 import injectTapEventPlugin from 'react-tap-event-plugin';
