@@ -7,24 +7,6 @@ import TextField from 'material-ui/TextField';
 
 import TaskService from './TaskService.js';
 
-const TaskCard = (task, key) => (
-  // 複数要素の場合 `key` プロパティが必要
-  <Card key={key} style={{marginTop: 20}}>
-    <CardHeader
-      title={task.summary}
-      actAsExpander={true}
-      showExpandableButton={true}
-    />
-    <CardActions>
-      <FlatButton label="編集" />
-      <FlatButton label="削除" />
-    </CardActions>
-    <CardText expandable={true}>
-      {task.detail}
-    </CardText>
-  </Card>
-);
-
 const styles = {
   footer: {
     position: 'fixed',
@@ -44,7 +26,7 @@ class Top extends Component {
     super(props, context);
 
     this.state = {
-      tasks: [],
+      tasks: {},
       showAddForm: false,
       summary: '',
       detail: '',
@@ -55,7 +37,7 @@ class Top extends Component {
 
   componentWillMount() {
     this.taskEmmeter.on('value', (snapshot) => {
-      this.setState({tasks: snapshot.val()});
+      this.setState({tasks: snapshot.val() || {}});
     });
   }
 
@@ -65,7 +47,34 @@ class Top extends Component {
 
   handleAddTap = () => {
     console.log('add');
-    this.setState({showAddForm: true});
+
+    this.setState({
+      showAddForm: true,
+      summary: '',
+      detail: '',
+      key: null,
+    });
+  }
+
+  handleEditTap = (key) => {
+    console.log('edit');
+
+    const task = this.state.tasks[key];
+
+    this.setState({
+      showAddForm: true,
+      summary: task.summary,
+      detail: task.detail,
+      key: key,
+    });
+  }
+
+  handleRemoveTap = (key) => {
+    console.log('remove');
+
+    TaskService
+      .delete(this.props.user.uid, key)
+      .then(() => console.log('delete success', arguments));
   }
 
   handleCancelTap = () => {
@@ -80,8 +89,14 @@ class Top extends Component {
     };
 
     console.log('save', task);
-    TaskService.create(this.props.user.uid, task)
-      .then(() => console.log('create success', arguments));
+
+    if (this.state.key) {
+      TaskService.update(this.props.user.uid, this.state.key, task)
+        .then(() => console.log('update success', arguments));
+    } else {
+      TaskService.create(this.props.user.uid, task)
+        .then(() => console.log('create success', arguments));
+    }
 
     this.setState({showAddForm: false});
   }
@@ -131,6 +146,30 @@ class Top extends Component {
           />
         </div>
       </div>
+    );
+
+    const TaskCard = (task, key) => (
+      // 複数要素の場合 `key` プロパティが必要
+      <Card key={key} style={{marginTop: 20}}>
+        <CardHeader
+          title={task.summary}
+          actAsExpander={true}
+          showExpandableButton={true}
+        />
+        <CardActions>
+          <FlatButton
+            label="編集"
+            onTouchTap={() => this.handleEditTap(key)}
+          />
+          <FlatButton
+            label="削除"
+            onTouchTap={() => this.handleRemoveTap(key)}
+          />
+        </CardActions>
+        <CardText expandable={true}>
+          {task.detail}
+        </CardText>
+      </Card>
     );
 
     return (
