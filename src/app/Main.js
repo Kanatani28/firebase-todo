@@ -35,8 +35,18 @@ class Main extends Component {
     };
   }
 
+  // Mainコンポーネントがマウントされる直前に実行される
+  componentWillMount = () => {
+    firebase.auth().getRedirectResult()
+      .then((result) => console.log('user', result.user))
+      // .catch((err) => console.log('auth error', err))
+      // .catch書かなかったらErrorがthrowされる
+
+      // FIXME: loading表示
+  }
+
   handleTouchTap = () => {
-    var provider = new firebase.auth.GoogleAuthProvider();
+    const provider = new firebase.auth.GoogleAuthProvider();
     firebase.auth().signInWithRedirect(provider);
 
     this.setState({
