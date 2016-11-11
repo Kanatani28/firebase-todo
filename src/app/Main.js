@@ -13,6 +13,8 @@ import FlatButton from 'material-ui/FlatButton';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
+import Top from './Top.js';
+
 const styles = {
   container: {
     textAlign: 'center',
@@ -70,13 +72,9 @@ class Main extends Component {
       </div>
     );
 
-    const top = (
-      <div>ログイン成功したよ</div>
-    )
-
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
-        {this.state.user ? top : login}
+        {this.state.user ? <Top user={this.state.user} /> : login}
       </MuiThemeProvider>
     );
   }
