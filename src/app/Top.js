@@ -57,6 +57,8 @@ class Top extends Component {
         {summary: 'summary', detail: 'detail'},
       ],
       showAddForm: false,
+      summary: '',
+      detail: '',
     };
   }
 
@@ -71,9 +73,28 @@ class Top extends Component {
   }
 
   handleSaveTap = () => {
-    console.log('save');
+    const task = {
+      summary: this.state.summary,
+      detail: this.state.detail,
+    };
+
+    console.log('save', task);
     // TODO: save
     this.setState({showAddForm: false});
+  }
+
+  changeSummary = (e) => {
+    const summary = e.target.value;
+    // FIXME: 入力値チェック
+
+    this.setState({summary: summary});
+  }
+
+  changeDetail = (e) => {
+    const detail = e.target.value;
+    // FIXME: 入力値チェック
+
+    this.setState({detail: detail});
   }
 
   render() {
@@ -83,6 +104,8 @@ class Top extends Component {
         <TextField
           hintText="Hint Text"
           floatingLabelText="概要"
+          onChange={this.changeSummary}
+          value={this.state.summary}
         /><br />
         <TextField
           hintText="Hint Text"
@@ -90,6 +113,8 @@ class Top extends Component {
           multiLine={true}
           rows={2}
           rowsMax={4}
+          onChange={this.changeDetail}
+          value={this.state.detail}
         /><br />
         <div>
           <FlatButton
