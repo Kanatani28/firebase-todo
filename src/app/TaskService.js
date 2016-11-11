@@ -13,6 +13,10 @@ class TaskService {
 
     return ref.update(updates);
   }
+
+  static read(uid) {
+    return firebase.database().ref('task/' + uid)
+  }
 }
 
 export default TaskService;

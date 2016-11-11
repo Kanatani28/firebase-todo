@@ -44,24 +44,23 @@ class Top extends Component {
     super(props, context);
 
     this.state = {
-      tasks: [
-        {summary: 'summary', detail: 'detail'},
-        {summary: 'summary', detail: 'detail'},
-        {summary: 'summary', detail: 'detail'},
-        {summary: 'summary', detail: 'detail'},
-        {summary: 'summary', detail: 'detail'},
-        {summary: 'summary', detail: 'detail'},
-        {summary: 'summary', detail: 'detail'},
-        {summary: 'summary', detail: 'detail'},
-        {summary: 'summary', detail: 'detail'},
-        {summary: 'summary', detail: 'detail'},
-        {summary: 'summary', detail: 'detail'},
-        {summary: 'summary', detail: 'detail'},
-      ],
+      tasks: [],
       showAddForm: false,
       summary: '',
       detail: '',
     };
+
+    this.taskEmmeter = TaskService.read(this.props.user.uid);
+  }
+
+  componentWillMount() {
+    this.taskEmmeter.on('value', (snapshot) => {
+      this.setState({tasks: snapshot.val()});
+    });
+  }
+
+  componentWillUnmount() {
+    this.taskEmmeter.off();
   }
 
   handleAddTap = () => {
@@ -138,7 +137,7 @@ class Top extends Component {
       <div style={{padding: 10, marginTop: 10, marginBottom: 70}}>
         {this.state.showAddForm ? addForm :
           <div>
-            {this.state.tasks.map(TaskCard)}
+            {Object.keys(this.state.tasks).map((key) => TaskCard(this.state.tasks[key], key))}
             <div style={styles.footer}>
               <FloatingActionButton
                 style={styles.add}
