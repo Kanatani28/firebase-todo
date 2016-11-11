@@ -5,6 +5,8 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import TextField from 'material-ui/TextField';
 
+import TaskService from './TaskService.js';
+
 const TaskCard = (task, key) => (
   // 複数要素の場合 `key` プロパティが必要
   <Card key={key} style={{marginTop: 20}}>
@@ -79,7 +81,9 @@ class Top extends Component {
     };
 
     console.log('save', task);
-    // TODO: save
+    TaskService.create(this.props.user.uid, task)
+      .then(() => console.log('create success', arguments));
+
     this.setState({showAddForm: false});
   }
 
